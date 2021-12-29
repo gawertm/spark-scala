@@ -49,14 +49,3 @@ object olist extends ScalaModule { outer =>
     def forkArgs = Seq("-Dspark.master=local[*]")
   }
 }
-
-object runner extends ScalaModule {
-
-  import Deps._ 
-
-  def scalaVersion = "2.13.6"
-
-  def ivyDeps = Agg(
-    ivy"com.lihaoyi::os-lib:0.7.8"
-  )
-}
