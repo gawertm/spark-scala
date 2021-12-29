@@ -1,4 +1,7 @@
 import mill._, scalalib._
+import mill.modules.Assembly
+import java.io.File
+
 
 object Deps {
   val SPARK_VERSION = "3.1.2"
@@ -23,7 +26,9 @@ object olist extends ScalaModule { outer =>
   def ivyDeps = Agg(
     ivy"com.lihaoyi::upickle:0.9.7",
     ivy"io.getquill::quill-spark:3.9.0"
-  )
+  ) 
+
+  override def mainClass = T { Some("OlistCli") }
 
   def compileIvyDeps = ivySparkDeps
 
@@ -39,7 +44,7 @@ object olist extends ScalaModule { outer =>
     def scalaVersion = outer.scalaVersion
     def moduleDeps = Seq(outer)
     def ivyDeps = outer.ivySparkDeps
-    override def mainClass = T { Some("SparkCli") }
+    override def mainClass = outer.mainClass
 
     def forkArgs = Seq("-Dspark.master=local[*]")
   }
