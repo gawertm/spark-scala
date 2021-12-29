@@ -1,8 +1,0 @@
-Exception in thread "Thread-0" java.lang.RuntimeException: java.io.IOException: GetOverlappedResult() failed for read operation: 233
-	at mill.main.client.InputPumper.run(InputPumper.java:34)
-	at java.base/java.lang.Thread.run(Thread.java:834)
-Caused by: java.io.IOException: GetOverlappedResult() failed for read operation: 233
-	at org.scalasbt.ipcsocket.Win32NamedPipeSocket$Win32NamedPipeSocketInputStream.read(Win32NamedPipeSocket.java:161)
-	at java.base/java.io.InputStream.read(InputStream.java:205)
-	at mill.main.client.InputPumper.run(InputPumper.java:25)
-	... 1 more
