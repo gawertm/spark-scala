@@ -40,6 +40,7 @@ object OlistCli {
 
         val joindf = customersdf.join(timezonesdf, "customer_state") //joining customers dataset with timezones for later utc conversion
         var masterdf = ordersdf.join(joindf, "customer_id") // join joined customer datset with orders dataset
+        masterdf = masterdf.drop("order_approved_at", "order_delivered_carrier_date","order_estimated_delivery_date", "customer_zip_code_prefix", "standard") //drop not needed columns
 
         //using to_utc_timestamp from spark sql library. timezones are taken from the joined timezones csv file
         masterdf = masterdf.withColumn("order_time_utc", expr("to_utc_timestamp(order_purchase_timestamp,'America/Sao_Paulo')"))
