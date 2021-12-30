@@ -8,10 +8,11 @@ The project is implemented using Scala and Spark.
 
 The difficult part is that the Delivery Date is stored in the customers timezone and brazil has several timezones. The Purchase Date is in Sao Paulo timezone.
 
+
 ## Architecture
 
 - I decided to transform the necessary timestamps for comparison into UTC time. 
-- The Spark SQl Library provides a to_utc_timestamp function that takes in a timestamp as well as a timezone and transforms it to UTC.
+- The Spark SQL Library provides a to_utc_timestamp function that takes in a timestamp as well as a timezone and transforms it to UTC.
 - The big advantage is that it automatically respects DST because some of the brazilian timezones use DST.
 - To know which customer (and thus which order) is in which timezone, I am using a small lookup file. Luckily, each state in Brazil has only 1 timezone.
 - So I looked up the 27 different customer_state and their respective timezone from http://www.statoids.com/tbr.html and put it to a csv file
@@ -22,12 +23,14 @@ See the Architecture here:
 
 ![Arcitecture](Architecture.png)
 
+
 ## Environment
 
-Code was written in Scala on Visual Studio Code. Mill was used as the build tool
+The Code was written in Scala on Visual Studio Code. Mill was used as the build tool
 
-https://code.visualstudio.com
-https://scalameta.org/metals/docs/editors/vscode/
-https://github.com/com-lihaoyi/mill
+- https://code.visualstudio.com
+- https://scalameta.org/metals/docs/editors/vscode/
+- https://github.com/com-lihaoyi/mill
+
 
 ## How to reproduce locally
