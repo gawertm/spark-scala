@@ -1,7 +1,7 @@
 # spark-scala
 Using Kaggle Olist Dataset to determine late deliveries
 
-Results available at 
+Results available at: 
 
 https://clicklearn.gawert.de/d/zz3dyd0nz/olist-dashboard?orgId=1&from=1640923673755&to=1640945273756
 
@@ -9,7 +9,7 @@ username: olist
 
 password: olist
 
-JAR File available at (main class "OlistCli"):
+JAR File available at: (main class "OlistCli")
 
 https://sparkscalablobstorage.blob.core.windows.net/spark-scala/out.jar
 
@@ -48,9 +48,9 @@ The Code was written in Scala on Visual Studio Code. Mill was used as the build 
 - https://github.com/com-lihaoyi/mill
 
 
-## How toview the results
+## How to view the results
 
-As the target audience is a marketing/sales department, the easiest way to retrieve the results is by logging in to a grafana dashboard that I created.
+As the target audience is a marketing/sales department, the easiest way to retrieve the results is by logging in to a grafana dashboard that I created:
 
 https://clicklearn.gawert.de/d/zz3dyd0nz/olist-dashboard?orgId=1&from=1640923673755&to=1640945273756
 
@@ -60,7 +60,7 @@ password: olist
 
 Here you can view the results, order by specific columns and more.
 
-You can also download the csv file from
+You can also download the csv file from:
 
 https://github.com/gawertm/spark-scala/blob/main/results/part-00000-cd20baee-355e-4ca5-b784-61ee57617157-c000.csv
 
@@ -78,12 +78,12 @@ For more tech-savvy people, you can try to run the code and produce the results 
     https://git-scm.com/downloads
 
 - To avoid version problem, best to use Spark 3.1.2 and Hadoop 2.7
-- Then you have to clone the github repository in a terminal with 
+- Then you have to clone the github repository in a terminal with:
 
     git clone https://github.com/gawertm/spark-scala.git
 
 - Once Spark and Hadoop and the repo are setup properly, you just have to build the application
-- For this, install mill following this instruction or on windows execute the mill.bat file from the repository. 
+- For this, install mill following this instruction or on windows execute the mill.bat file from the repository
 - Then from a terminal in the same directory run:
 
     mill -i olist.assembly
@@ -137,7 +137,7 @@ https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tab
 
 https://docs.microsoft.com/en-us/azure/databricks/scenarios/quickstart-create-databricks-workspace-portal?tabs=azure-portal#create-an-azure-databricks-workspace
 
-- add the storage account access keys to the databricks secrets following this isntruction:
+- add the storage account access keys to the databricks secrets following this instruction:
 
 https://docs.databricks.com/data/data-sources/azure/adls-gen2/azure-datalake-gen2-get-started.html
 
@@ -149,7 +149,6 @@ dbutils.fs.mount(
   source = "wasbs://<container-name>@<storage-account-name>.blob.core.windows.net/<directory-name>",
   mountPoint = "/mnt/spark-scala",
   extraConfigs = Map("<conf-key>" -> dbutils.secrets.get(scope = "<scope-name>", key = "<key-name>")))core.windows.net/<<DirectoryName>>"
-  output_blob_folder = "%s/CSV_data_folder" % output_container_path
 
 masterdf
     .coalesce(1)
@@ -158,7 +157,7 @@ masterdf
     .option("header", "true")
     .option("delimiter", ",")
     .format("com.databricks.spark.csv")
-    .save(output_blob_folder))
+    .save(/mnt/spark-scala)
 
 ```
 - replace the container and storage account name with the previously created ones and choose a directory name e.g. results
