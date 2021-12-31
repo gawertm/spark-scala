@@ -131,3 +131,7 @@ https://docs.microsoft.com/en-us/azure/databricks/scenarios/quickstart-create-da
 - Use "OlistCli" as Main Class. The rest you can leave as defaults
 
 ![job_creation](images/job_creation.png)
+
+- Then Click on Run now. Once the Cluster is created, you can navigate to your job and see details from the Spark UI
+
+![running_job](images/running_job.png)
