@@ -42,14 +42,23 @@ object OlistCli {
         var masterdf = ordersdf.join(joindf, "customer_id") // join joined customer datset with orders dataset
         masterdf = masterdf.drop("order_approved_at", "order_delivered_carrier_date","order_estimated_delivery_date", "customer_zip_code_prefix", "standard") //drop not needed columns
 
-        //using to_utc_timestamp from spark sql library. timezones are taken from the joined timezones csv file
+        // using to_utc_timestamp from spark sql library. timezones are taken from the joined timezones csv file
         masterdf = masterdf.withColumn("order_time_utc", expr("to_utc_timestamp(order_purchase_timestamp,'America/Sao_Paulo')"))
         masterdf = masterdf.withColumn("delivery_time_utc", expr("to_utc_timestamp(order_delivered_customer_date, customer_timezone)"))
-        masterdf = masterdf.withColumn("delivery_delay_in_days", datediff(col("delivery_time_utc"), col("order_time_utc")))
+
+        //substract the order time in UTC from the delivery time in UTC and calculate the difference in days
+        masterdf = masterdf.withColumn("delivery_delay_in_days", round(((col("delivery_time_utc").cast(LongType) - col("order_time_utc").cast(LongType))/(24*3600)),2))
+        
+        // alternative implementation is to use datediff, which rounds more and will give only delayed deliveries with 11 days or bigger (and not e.g. 10.03 days)
+        // implementation will depend on required business logic
+        // masterdf = masterdf.withColumn("delivery_delay_in_days", datediff(col("delivery_time_utc"), col("order_time_utc")))
+
         
         //filter for delivery that are delayed more than 10 days
-        masterdf = masterdf.filter(col("delivery_delay_in_days") > 10).sort(desc("delivery_delay_in_days"))
-        masterdf.coalesce(1).write.mode(SaveMode.Overwrite).option("header", "true").option("delimiter", ",").csv("results") //coalesce into 1 csv file and overwrite if file already exists
+        masterdf = masterdf.filter(col("delivery_delay_in_days") > 10.00).sort(desc("delivery_delay_in_days"))
+
+        //coalesce into 1 csv file and overwrite if file already exists
+        masterdf.coalesce(1).write.mode(SaveMode.Overwrite).option("header", "true").option("delimiter", ",").csv("results") 
     }
 
     def run(f: SparkSession => Unit) = {
