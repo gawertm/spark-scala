@@ -54,9 +54,7 @@ As the target audience is a marketing/sales department, the easiest way to retri
 
 https://clicklearn.gawert.de/d/zz3dyd0nz/olist-dashboard?orgId=1&from=1640923673755&to=1640945273756
 
-username: olist
-
-password: olist
+username/password: olist/olist
 
 Here you can view the results, order by specific columns and more.
 
