@@ -9,6 +9,10 @@ username: olist
 
 password: olist
 
+JAR File available at (main class "OlistCli"):
+
+https://sparkscalablobstorage.blob.core.windows.net/spark-scala/out.jar
+
 ## Project Overview
 
 The Goal of the project is to find deliveries that are late by more than 10 days in the Kaggle Olist Dataset. This way, a marketing department can provide a 10% discount for those deliveries and boost the sales.
@@ -61,10 +65,10 @@ You can also download the csv file from
 https://github.com/gawertm/spark-scala/blob/main/results/part-00000-cd20baee-355e-4ca5-b784-61ee57617157-c000.csv
 
 
-For more tech-savvy people, you can try to run the code and produce the results yourself:
+For more tech-savvy people, you can try to run the code and produce the results yourself with the following options:
 
 
-### Using Spark
+### Option 1: Using Spark
 
 - You will need a working Spark setup on your system as well as git
     
@@ -96,7 +100,7 @@ Then run the following following command:
 - To avoid this issue make the folder C:\Users\{YourUserID}\AppData\Local\Temp writable by everyone
 
 
-### Alternative 1: mill standalone run:
+### Option 2: mill standalone run:
 
 - If Spark-submit or the jar assembly is not working, e.g. on windows. you can use mill to run the app as standalone
 - For this, execute the mill.bat file in the cloned repository
@@ -106,7 +110,7 @@ Then run the following command from a terminal in this directory:
     mill -i olist.standalone.run
 
 
-### Alternative 2: Run on Databricks Cluster (e.g. on AWS or Azure)
+### Option 3: Run on Databricks Cluster (e.g. on AWS or Azure)
 
 If the other solutions do not work, you can also run a Spark job on a databricks job cluster in the cloud.
 
@@ -117,14 +121,55 @@ Here you will find the instructions for Microsoft Azure:
 
 https://azure.microsoft.com/en-us/free/
 
+- Then you have to create your first storage account:
+
+https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal
+
+- Make sure to select the following default options:
+
+![create_storage_account](images/create_storage_account.png)
+
+- Once done, you can retrieve an access key from the Access keys menu bar
+- From the Dat Storage->Containers menu bar, create a new container
+
+- now is a good time to create an Azure Databricks Workspace
 - once you are in the Azure portal, you have to create a Databricks Workspace as described here:
 
 https://docs.microsoft.com/en-us/azure/databricks/scenarios/quickstart-create-databricks-workspace-portal?tabs=azure-portal#create-an-azure-databricks-workspace
 
+- add the storage account access keys to the databricks secrets following this isntruction:
+
+https://docs.databricks.com/data/data-sources/azure/adls-gen2/azure-datalake-gen2-get-started.html
+
 - Afterwards you will have to create a new Job. A databricks job cluster will be automatically created during the setup
-- Once you launched Databricks workspace , you will find "New Job" on the Homepage under Common Tasks. Click on it
+- But first, we have to modify the code, so that the output file will be written to an Azure Storage Account and not locally.
+- For this, we add some mount infos and relace masterdf.coalesce(1).write.mode(SaveMode.Overwrite).option("header", "true").option("delimiter", ",").csv("results") by:
+```
+dbutils.fs.mount(
+  source = "wasbs://<container-name>@<storage-account-name>.blob.core.windows.net/<directory-name>",
+  mountPoint = "/mnt/spark-scala",
+  extraConfigs = Map("<conf-key>" -> dbutils.secrets.get(scope = "<scope-name>", key = "<key-name>")))core.windows.net/<<DirectoryName>>"
+  output_blob_folder = "%s/CSV_data_folder" % output_container_path
+
+masterdf
+    .coalesce(1)
+    .write
+    .mode(SaveMode.Overwrite)
+    .option("header", "true")
+    .option("delimiter", ",")
+    .format("com.databricks.spark.csv")
+    .save(output_blob_folder))
+
+```
+- replace the container and storage account name with the previously created ones and choose a directory name e.g. results
+- also replace the secret scope name and key by the ones created
+- (re-)run the mill olist.assembly command to create a new jar file with the updated code for Azure
+
+- now you can create the job in the Databricks workspace , you will find "New Job" on the Homepage under Common Tasks. Click on it
 - Provide a meaningful task name like "Olist Deliveries" As Type, Choose "JAR"
 - Click on "Add" to upload a Jar file that was either created during assembly step or is available at:
+
+https://sparkscalablobstorage.blob.core.windows.net/spark-scala/out.jar
 
 ![Upload_jar](images/Upload_Jar.png)
 
@@ -135,3 +180,7 @@ https://docs.microsoft.com/en-us/azure/databricks/scenarios/quickstart-create-da
 - Then Click on Run now. Once the Cluster is created, you can navigate to your job and see details from the Spark UI
 
 ![running_job](images/running_job.png)
+
+- Back in your storage account, you will see the directory created in your container. There will be a .csv file that you can download or open
+
+![sucess_file](images/success_file.png)

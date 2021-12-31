@@ -58,7 +58,13 @@ object OlistCli {
         masterdf = masterdf.filter(col("delivery_delay_in_days") > 10.00).sort(desc("delivery_delay_in_days"))
 
         //coalesce into 1 csv file and overwrite if file already exists
-        masterdf.coalesce(1).write.mode(SaveMode.Overwrite).option("header", "true").option("delimiter", ",").csv("results") 
+        masterdf
+            .coalesce(1)
+            .write
+            .mode(SaveMode.Overwrite)
+            .option("header", "true")
+            .option("delimiter", ",")
+            .csv("results") 
     }
 
     def run(f: SparkSession => Unit) = {
