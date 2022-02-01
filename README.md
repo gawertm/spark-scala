@@ -3,11 +3,7 @@ Using Kaggle Olist Dataset to determine late deliveries
 
 Results available at: 
 
-https://clicklearn.gawert.de/d/zz3dyd0nz/olist-dashboard?orgId=1&from=1640923673755&to=1640945273756
-
-username: olist
-
-password: olist
+https://github.com/gawertm/spark-scala/raw/main/results/part-00000-01e5a808-86f4-46f6-b5df-e0a36e170b19-c000.csv
 
 JAR File available at: (main class "OlistCli")
 
@@ -50,17 +46,8 @@ The Code was written in Scala on Visual Studio Code. Mill was used as the build 
 
 ## How to view the results
 
-As the target audience is a marketing/sales department, the easiest way to retrieve the results is by logging in to a grafana dashboard that I created:
-
-https://clicklearn.gawert.de/d/zz3dyd0nz/olist-dashboard?orgId=1&from=1640923673755&to=1640945273756
-
-username/password: olist/olist
-
-Here you can view the results, order by specific columns and more.
-
-You can also download the csv file from:
-
-https://github.com/gawertm/spark-scala/blob/main/results/part-00000-cd20baee-355e-4ca5-b784-61ee57617157-c000.csv
+As the target audience is a marketing/sales department, the easiest way to retrieve the results is by viewing the csv file from:
+https://github.com/gawertm/spark-scala/raw/main/results/part-00000-01e5a808-86f4-46f6-b5df-e0a36e170b19-c000.csv
 
 
 For more tech-savvy people, you can try to run the code and produce the results yourself with the following options:
